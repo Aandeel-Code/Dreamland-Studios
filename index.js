@@ -4,7 +4,6 @@ const Discord = require("discord.js");
 const bot = new Discord.Client({disableEveryone: true});
 bot.commands = new Discord.Collection();
 
-require("discord-buttons-v13")(bot);
 require("./host")
 
 const fs = require('fs');
