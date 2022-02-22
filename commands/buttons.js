@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { MessageButton } = require("discord-buttons");
+const { MessageButton } = require("discord-buttons-v13");
 
 module.exports.run = async (bot, message, args) => {
       let sayEmbed = new Discord.MessageEmbed()
