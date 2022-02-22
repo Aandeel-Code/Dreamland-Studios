@@ -1,25 +1,13 @@
 const config = require("./config.json");
 const token = process.env.DISCORD_TOKEN;
 const Discord = require("discord.js");
+const fs = require("fs");
 const bot = new Discord.Client({disableEveryone: true});
 bot.commands = new Discord.Collection();
 
 require("./host")
+require('discord-buttons-v13')(bot);
 
-const fs = require('fs');
-const { Intents } = require('discord.js');
-
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS] });
-
-client.slash = new Discord.Collection();
-const commandFiles = fs.readdirSync('./slash/').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-	const command = require(`./slash/${file}`);
-	// Set a new item in the Collection
-	// With the key as the command name and the value as the exported module
-	client.slash.set(command.data.name, command);
-}
 
 fs.readdir("./commands/", (err, files) => {
 
@@ -38,20 +26,17 @@ fs.readdir("./commands/", (err, files) => {
   });
 
 });
+//Add Role And Welcome New Member
+bot.on('guildMemberAdd', member => {
+  console.log('User' + member.user.tag + 'has joined the server!');
 
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
+  var role = member.guild.roles.find('name', 'Member');
 
-	const command = client.slash.get(interaction.commandName);
+  client.channels.find("name", "welcome").send('Welcome '+ member.username)
 
-	if (!command) return;
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
+  setTimeout(function(){
+  member.addRole(role);
+}, 10000);
 });
 
 //Playing Message
